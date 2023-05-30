@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react'
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+
 import bus from '../../utils/bus'
 
 import styles from './Message.module.css'
@@ -26,7 +29,9 @@ function Message() {
 
    return (
       visibility && (
-         <div className={`${styles.message} ${styles[type]}`}>{message}</div>
+         <Stack sx={{ width: '100%'}} spacing={2}>
+            <Alert variant="filled" severity={type}>{message}</Alert>
+         </Stack>
       )
       
    )
