@@ -25,7 +25,7 @@ function Register() {
                text="Nome"
                type="text"
                name="name"
-               placeholder="Digite seu nome"
+               placeholder="Digite seu nomae"
                handleOnChange={handleChange}
             />
             <Input
@@ -39,7 +39,7 @@ function Register() {
                text="Senha"
                type="password"
                name="password"
-               placeholder="Digite a sua senha"
+               placeholder="Digite a sua senhaa"
                handleOnChange={handleChange}
             />
             <Input
