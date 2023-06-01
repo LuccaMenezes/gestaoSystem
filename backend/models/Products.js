@@ -4,29 +4,43 @@ const { Schema } = mongoose
 const Products = mongoose.model(
    'Products',
    new Schema({
-      name: {
+      code: {
+         type: Number,
+         required: true,
+      },
+      description: {
          type: String,
          required: true,
       },
-      email: {
+      unit: {
          type: String,
          required: true,
       },
-      password: {
+      category: {
          type: String,
          required: true,
       },
-      image: {
-         type: String,
-      },
-      phone: {
+      subcategory: {
          type: String,
          required: true,
       },
-      company: {
+      provider: {
          type: String,
          required: true,
       },
+      purchasePrice: {
+         type: Number,
+         required: true,
+      },
+      salePrice: {
+         type: Number,
+         required: true,
+      },
+      margin: {
+         type: String,
+         required: true,
+      },
+
    }, { timestamps: true }),
 )
 
