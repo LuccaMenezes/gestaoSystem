@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { styled, useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -135,6 +136,32 @@ const Sidebar = () => {
     },
   });
 
+  function getLink(text) {
+    switch (text) {
+      case 'Home':
+        return '/';
+      case 'Ponto de Venda':
+        return '/pontodevenda';
+      case 'Entradas':
+        return '/entradas';
+      case 'Saídas':
+        return '/saidas';
+      case 'Produtos':
+        return '/produtos';
+      case 'Fornecedores':
+        return '/fornecedores';
+      case 'Relatórios':
+        return '/relatorios';
+      case 'Configurações':
+        return '/configuracoes';
+      case 'Sair':
+        return '/login';
+      default:
+        return '/';
+    }
+  }
+
+
   return (
     <ThemeProvider theme={themeDrawer}>
       <Box sx={{ display: 'flex' }}>
@@ -159,7 +186,7 @@ const Sidebar = () => {
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open} >
-          <DrawerHeader sx={{backgroundColor: '#2e2e2e'}}>
+          <DrawerHeader sx={{ backgroundColor: '#2e2e2e' }}>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === 'rtl' ? <ChevronRightIcon sx={{ color: '#fff' }} /> : <ChevronLeftIcon sx={{ color: '#fff' }} />}
             </IconButton>
@@ -169,6 +196,8 @@ const Sidebar = () => {
             {['Home', 'Ponto de Venda', 'Entradas', 'Saídas'].map((text, index) => (
               <ListItem key={text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
+                  component={Link}
+                  to={getLink(text)}
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
@@ -191,11 +220,13 @@ const Sidebar = () => {
               </ListItem>
             ))}
           </List>
-          <Divider sx={{ backgroundColor: '#2e2e2e' }}/>
+          <Divider sx={{ backgroundColor: '#2e2e2e' }} />
           <List>
             {['Produtos', 'Fornecedores', 'Relatórios'].map((text, index) => (
               <ListItem key={text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
+                  component={Link}
+                  to={getLink(text)}
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
@@ -218,11 +249,13 @@ const Sidebar = () => {
               </ListItem>
             ))}
           </List>
-          <Divider sx={{ backgroundColor: '#2e2e2e' }}/>
+          <Divider sx={{ backgroundColor: '#2e2e2e' }} />
           <List>
             {['Configurações', 'Sair'].map((text, index) => (
               <ListItem key={text} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
+                  component={Link}
+                  to={getLink(text)}
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
