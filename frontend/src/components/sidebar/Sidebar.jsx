@@ -32,6 +32,8 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 
+import { Context } from '../../context/UserContext';
+
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -161,6 +163,7 @@ const Sidebar = () => {
     }
   }
 
+  const { logout } = React.useContext(Context)
 
   return (
     <ThemeProvider theme={themeDrawer}>
@@ -262,6 +265,7 @@ const Sidebar = () => {
                     px: 2.5,
                     color: '#fff',
                   }}
+                  onClick={text === 'Sair' ? logout : undefined}
                 >
                   <ListItemIcon
                     sx={{
