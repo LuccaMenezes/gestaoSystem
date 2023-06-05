@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react'
-import Alert from '@mui/material/Alert';
+import React, { useState, useEffect } from 'react'
 import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
 
 import bus from '../../utils/bus'
 
@@ -13,7 +15,7 @@ function Message() {
 
    useEffect(() => {
 
-      bus.addListener('flash', ({message, type}) => {
+      bus.addListener('flash', ({ message, type }) => {
 
          setVisibility(true)
          setMessage(message)
@@ -27,13 +29,27 @@ function Message() {
 
    })
 
+   const Alert = React.forwardRef(function Alert(props, ref) {
+      return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+   });
+
+   const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+         return;
+      }
+
+      setVisibility(false);
+   };
+
    return (
       visibility && (
-         <Stack sx={{ width: '100%'}} spacing={2}>
-            <Alert variant="filled" severity={type}>{message}</Alert>
+         <Stack spacing={2} sx={{ width: '100%' }}>
+            <Snackbar open={visibility} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+               <Alert onClose={handleClose} severity={type} sx={{ width: '100%' }}>{message}</Alert>
+            </Snackbar>
          </Stack>
       )
-      
+
    )
 }
 

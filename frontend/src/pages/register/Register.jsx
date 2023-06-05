@@ -1,7 +1,9 @@
+import { Grid, Paper, Avatar, Typography, TextField, Button } from '@mui/material'
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import React, { useState, useContext } from 'react'
-import Input from '../../components/form/Input'
 
 import { Context } from '../../context/UserContext'
+
 
 function Register() {
 
@@ -10,6 +12,7 @@ function Register() {
 
    function handleChange(e) {
       setUser({ ...user, [e.target.name]: e.target.value})
+      console.log('a ' + setUser);
    }
 
    function handleSubmit (e) {
@@ -17,55 +20,30 @@ function Register() {
       register(user)
    }
 
+   const paperStyle={padding:'30px 30px', width:350, margin:'20px auto', borderRadius:'10px' }
+   const headerStyle={margin: 0}
+   const avatarStyle={backgroundColor: '#1bbd7e'}
+
    return (
-      <section>
-         <h1>Registrar</h1>
-         <form onSubmit={handleSubmit}>
-            <Input
-               text="Nome"
-               type="text"
-               name="name"
-               placeholder="Digite seu nomae"
-               handleOnChange={handleChange}
-            />
-            <Input
-               text="E-mail"
-               type="email"
-               name="email"
-               placeholder="Digite seu e-mail"
-               handleOnChange={handleChange}
-            />
-            <Input
-               text="Senha"
-               type="password"
-               name="password"
-               placeholder="Digite a sua senhaa"
-               handleOnChange={handleChange}
-            />
-            <Input
-               text="Confirmação de Senha"
-               type="password"
-               name="confirmpassword"
-               placeholder="Confirme a sua senha"
-               handleOnChange={handleChange}
-            />
-            <Input
-               text="Telefone"
-               type="text"
-               name="phone"
-               placeholder="Digite seu telefone"
-               handleOnChange={handleChange}
-            />
-            <Input
-               text="Empresa"
-               type="text"
-               name="company"
-               placeholder="Digite o nome da sua empresa"
-               handleOnChange={handleChange}
-            />
-            <input type="submit" value="Cadastrar"/>
-         </form>
-      </section>
+      <Grid>
+         <Paper elevation={20} style={paperStyle}>
+           <Grid align='center'>
+             <Avatar style={avatarStyle}>
+               
+             </Avatar>
+             <h2 style={headerStyle}>Cadastre-se</h2>
+           </Grid>
+           <form onSubmit={handleSubmit}>
+               <TextField fullWidth label='Name' name="name" variant="standard" onChange={handleChange}/>
+               <TextField fullWidth label='Email' name="email" variant="standard" onChange={handleChange}/>
+               <TextField fullWidth label='Senha' name="password" variant="standard" onChange={handleChange}/>
+               <TextField fullWidth label='Confirme sua senha' name="confirmpassword" variant="standard" onChange={handleChange}/>
+               <TextField fullWidth label='Telefone' name="phone" variant="standard" onChange={handleChange}/>
+               <TextField fullWidth label='Empresa' name="company" variant="standard" onChange={handleChange}/>
+               <Button type='submit' variant='contained' color='primary'>Cadastrar</Button>
+           </form>
+         </Paper>
+      </Grid>
    )
 }
 

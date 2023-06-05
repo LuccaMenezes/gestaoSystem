@@ -8,7 +8,7 @@ const Home = () => {
     <>
       <Box sx={{ display: "flex" }}>
         <Sidebar />
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px'}}>
           <h1>testeeee</h1>
         </Box>
       </Box>
