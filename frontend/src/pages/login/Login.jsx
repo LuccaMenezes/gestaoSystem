@@ -35,7 +35,7 @@ const login = () => {
           <form onSubmit={handleSubmit}>
             <TextField fullWidth label='Email' name="email" variant="standard" onChange={handleChange} />
             <TextField fullWidth label='Senha' name="password" variant="standard" onChange={handleChange} />
-            <Button type='submit' variant='contained' color='primary'>Cadastrar</Button>
+            <Button type='submit' variant='contained' color='primary'>Login</Button>
           </form>
           <Typography align='center'>
             Não tem conta? <Link to="/register">Clique Aqui</Link>
