@@ -11,8 +11,10 @@ app.use(express.static('public'));
 
 const UserRoutes = require('./routes/UserRoutes')
 const ProviderRoutes = require('./routes/ProviderRoutes')
+const CompanyRoutes = require('./routes/CompanyRoutes')
 
 app.use('/users', UserRoutes)
 app.use('/providers', ProviderRoutes)
+app.use('/company', CompanyRoutes)
 
 app.listen(5000);
