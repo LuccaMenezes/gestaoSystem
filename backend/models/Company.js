@@ -12,26 +12,6 @@ const Company = mongoose.model(
          type: String,
          required: true,
       },
-      contact: {
-         type: String,
-         required: true,
-      },
-      sector: {
-         type: String,
-         required: true,
-      },
-      businessLine: {
-         type: String,
-         required: true,
-      },
-      phone: {
-         type: String,
-         required: true,
-      },
-      email: {
-         type: String,
-         required: true,
-      },
       cep: {
          type: String,
          required: true,
@@ -51,6 +31,9 @@ const Company = mongoose.model(
       addressNumber: {
          type: Number,
          required: true,
+      },
+      image: {
+         type: String,
       },
    }, { timestamps: true }),
 )

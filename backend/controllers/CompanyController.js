@@ -5,7 +5,7 @@ module.exports = class CompanyController {
 
    static async register(req, res) {
 
-      const { nameCompany, cnpj, contact, sector, businessLine, phone, email, cep, city, state, address, addressNumber } = req.body
+      const { nameCompany, cnpj, cep, city, state, address, addressNumber } = req.body
 
       function validateField(value, errorMessage) {
          if (!value) {
@@ -19,27 +19,7 @@ module.exports = class CompanyController {
          return;
       }
 
-      if (validateField(contact, 'O nome do contato é obrigatório!')) {
-         return;
-      }
-
-      if (validateField(phone, 'O telefone é obrigatório!')) {
-         return;
-      }
-
-      if (validateField(email, 'O e-mail é obrigatório!')) {
-         return;
-      }
-
-      if (validateField(sector, 'O setor é obrigatório!')) {
-         return;
-      }
-
       if (validateField(nameCompany, 'O nome da empresa é obrigatório!')) {
-         return;
-      }
-
-      if (validateField(businessLine, 'O ramo de atuação é obrigatório!')) {
          return;
       }
 
@@ -76,11 +56,6 @@ module.exports = class CompanyController {
       const company = new Company({
          nameCompany,
          cnpj,
-         contact,
-         sector,
-         businessLine,
-         phone,
-         email,
          cep,
          city,
          state,
@@ -148,7 +123,19 @@ module.exports = class CompanyController {
    static async updateCompany(req, res) {
       const id = req.params.id
 
-      const { nameCompany, cnpj, contact, sector, businessLine, phone, email, cep, city, state, address, addressNumber } = req.body
+      const { nameCompany, cnpj, cep, city, state, address, addressNumber } = req.body
+
+      const company = await Company.findOne({ _id: id })
+
+      if (!company) {
+         res.status(404).json({ message: 'Empresa não encontrada!' })
+         return
+      }
+
+
+      if(req.file) {
+         company.image = req.file.filename
+      }
 
       const updatedData = {}
 
@@ -161,13 +148,7 @@ module.exports = class CompanyController {
       }
 
       // check if company exists
-      const company = await Company.findOne({ _id: id })
-
-      if (!company) {
-         res.status(404).json({ message: 'Empresa não encontrada!' })
-         return
-      }
-
+      
       //validations
       if (validateField(cnpj, 'O cnpj é obrigatório!')) {
          return;
@@ -175,40 +156,10 @@ module.exports = class CompanyController {
          updatedData.cnpj = cnpj
       }
 
-      if (validateField(contact, 'O nome do contato é obrigatório!')) {
-         return;
-      } else {
-         updatedData.contact = contact
-      }
-
-      if (validateField(phone, 'O telefone é obrigatório!')) {
-         return;
-      } else {
-         updatedData.phone = phone
-      }
-
-      if (validateField(email, 'O e-mail é obrigatório!')) {
-         return;
-      } else {
-         updatedData.email = email
-      }
-
-      if (validateField(sector, 'O setor é obrigatório!')) {
-         return;
-      } else {
-         updatedData.sector = sector
-      }
-
       if (validateField(nameCompany, 'O nome da empresa é obrigatório!')) {
          return;
       } else {
          updatedData.nameCompany = nameCompany
-      }
-
-      if (validateField(businessLine, 'O ramo de atuação é obrigatório!')) {
-         return;
-      } else {
-         updatedData.businessLine = businessLine
       }
 
       if (validateField(cep, 'O cep é obrigatório!')) {
