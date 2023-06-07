@@ -13,7 +13,11 @@ const Products = mongoose.model(
          required: true,
       },
       unit: {
-         type: String,
+         type: Number,
+         required: true,
+      },
+      minimumStock: {
+         type: Number,
          required: true,
       },
       category: {
