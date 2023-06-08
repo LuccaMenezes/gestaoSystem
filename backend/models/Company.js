@@ -32,6 +32,10 @@ const Company = mongoose.model(
          type: Number,
          required: true,
       },
+      neighborhood: {
+         type: String,
+         required: true,
+      },
       image: {
          type: String,
       },

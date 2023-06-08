@@ -5,7 +5,7 @@ module.exports = class CompanyController {
 
    static async register(req, res) {
 
-      const { nameCompany, cnpj, cep, city, state, address, addressNumber } = req.body
+      const { nameCompany, cnpj, cep, city, state, address, addressNumber, neighborhood } = req.body
 
       function validateField(value, errorMessage) {
          if (!value) {
@@ -35,6 +35,10 @@ module.exports = class CompanyController {
          return;
       }
 
+      if (validateField(neighborhood, 'O bairro é obrigatório!')) {
+         return;
+      }
+
       if (validateField(city, 'A cidade é obrigatória!')) {
          return;
       }
@@ -61,6 +65,7 @@ module.exports = class CompanyController {
          state,
          address,
          addressNumber,
+         neighborhood,
       })
 
       try {
@@ -123,7 +128,7 @@ module.exports = class CompanyController {
    static async updateCompany(req, res) {
       const id = req.params.id
 
-      const { nameCompany, cnpj, cep, city, state, address, addressNumber } = req.body
+      const { nameCompany, cnpj, cep, city, state, address, addressNumber, neighborhood } = req.body
 
       const company = await Company.findOne({ _id: id })
 
@@ -178,6 +183,12 @@ module.exports = class CompanyController {
          return;
       } else {
          updatedData.addressNumber = addressNumber
+      }
+
+      if (validateField(neighborhood, 'O bairro é obrigatório!')) {
+         return;
+      } else {
+         updatedData.neighborhood = neighborhood
       }
 
       if (validateField(city, 'A cidade é obrigatória!')) {
