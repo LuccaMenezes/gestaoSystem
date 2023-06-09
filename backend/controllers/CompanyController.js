@@ -1,6 +1,9 @@
 const Company = require('../models/Company');
 const ObjectId = require('mongoose').Types.ObjectId
 
+const getToken = require('../helpers/get-token')
+const getUserByToken = require('../helpers/get-user-by-token')
+
 module.exports = class CompanyController {
 
    static async register(req, res) {
@@ -47,7 +50,6 @@ module.exports = class CompanyController {
          return;
       }
 
-
       // check if company exists
       const CompanyExists = await Company.findOne({ cnpj: cnpj })
 
@@ -56,6 +58,9 @@ module.exports = class CompanyController {
          return
       }
 
+      //get company owner
+      const token = getToken(req)
+      const user = await getUserByToken(token)
       // create company
       const company = new Company({
          nameCompany,
@@ -66,15 +71,29 @@ module.exports = class CompanyController {
          address,
          addressNumber,
          neighborhood,
+         user: {
+            _id: user._id,
+            name: user.name,
+         },
       })
 
       try {
-         await company.save();
-         res.status(200).json({ message: 'Empresa cadastrada com sucesso!' })
 
+         const newCompany = await company.save()
+         res.status(201).json({
+            message: 'Empresa cadastrada com sucesso!',
+            newCompany,
+         })
       } catch (error) {
          res.status(500).json({ message: error })
       }
+      // try {
+      //    await company.save();
+      //    res.status(200).json({ message: 'Empresa cadastrada com sucesso!' })
+
+      // } catch (error) {
+      //    res.status(500).json({ message: error })
+      // }
    }
 
    static async getAll(req, res) {
@@ -102,6 +121,19 @@ module.exports = class CompanyController {
 
       res.status(200).json({
          company: company,
+      })
+   }
+
+   static async getUserCompany(req, res) {
+
+      // get user from token
+      const token = getToken(req)
+      const user = await getUserByToken(token)
+
+      const company = await Company.find({ 'user._id': user._id }).sort('-createdAt')
+
+      res.status(200).json({
+         company,
       })
    }
 
@@ -138,7 +170,7 @@ module.exports = class CompanyController {
       }
 
 
-      if(req.file) {
+      if (req.file) {
          company.image = req.file.filename
       }
 
@@ -153,7 +185,7 @@ module.exports = class CompanyController {
       }
 
       // check if company exists
-      
+
       //validations
       if (validateField(cnpj, 'O cnpj é obrigatório!')) {
          return;

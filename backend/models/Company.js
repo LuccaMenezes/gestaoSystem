@@ -39,6 +39,7 @@ const Company = mongoose.model(
       image: {
          type: String,
       },
+      user: Object,
    }, { timestamps: true }),
 )
 
