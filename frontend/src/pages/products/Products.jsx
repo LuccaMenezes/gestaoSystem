@@ -1,90 +1,86 @@
-import React, { useState } from 'react';
-import Sidebar from '../../components/sidebar/Sidebar';
-import Box from '@mui/material/Box';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import AddIcon from '@mui/icons-material/Add';
-import InputAdornment from '@mui/material/InputAdornment';
+import Sidebar from '../../components/sidebar/Sidebar';
+import CreateProduct from '../../components/createProduct/CreateProduct';
+
+import useFlashMessage from '../../hooks/useFlashMessage';
+
+import Box from '@mui/material/Box';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+
+import api from '../../utils/api';
 
 const Products = () => {
-  const [open, setOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const { setFlashMessage } = useFlashMessage();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  useEffect(() => {
+    api.get('/products').then((response) => {
+      setProducts(response.data.product);
+    });
+  }, []);
 
   return (
     <>
-      <Box sx={{ display: "flex" }}>
-        <Sidebar />
-        <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '64px'}}>
-          <h1>Produtos</h1>
-          <Button variant="contained" onClick={handleClickOpen}>
-            Adicionar Produto
-          </Button>
+      <Box sx={{ display: 'flex' }}>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, p: 3, marginTop: '64px', marginLeft: '60px' }}
+        >
+          <Sidebar />
+          <Typography variant="h1" component="h1" mb={3}>
+            Produtos
+          </Typography>
+          <CreateProduct />
+
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Código</TableCell>
+                  <TableCell>Descrição</TableCell>
+                  <TableCell>Unidade</TableCell>
+                  <TableCell>Estoque Mínimo</TableCell>
+                  <TableCell>Categoria</TableCell>
+                  <TableCell>Subcategoria</TableCell>
+                  <TableCell>Fornecedor</TableCell>
+                  <TableCell>Preço de Custo</TableCell>
+                  <TableCell>Preço de Venda</TableCell>
+                  <TableCell>Margem</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {products.map((product, index) => (
+                  <TableRow
+                    key={product.code}
+                    style={{
+                      backgroundColor: index % 2 === 0 ? 'lightyellow' : 'white',
+                    }}
+                  >
+                    <TableCell>{product.code}</TableCell>
+                    <TableCell>{product.description}</TableCell>
+                    <TableCell>{product.unit}</TableCell>
+                    <TableCell>{product.minimumStock}</TableCell>
+                    <TableCell>{product.category}</TableCell>
+                    <TableCell>{product.subcategory}</TableCell>
+                    <TableCell>{product.provider}</TableCell>
+                    <TableCell>{product.purchasePrice}</TableCell>
+                    <TableCell>{product.salePrice}</TableCell>
+                    <TableCell>{product.margin}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
       </Box>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Cadastrar Produto</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={4}>
-              <TextField
-                label="Código"
-                fullWidth
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton>
-                        <AddIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField label="Descrição" fullWidth />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField label="Unidade" fullWidth />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField label="Estoque Mínimo" fullWidth />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField label="Categoria" fullWidth />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField label="Subcategoria" fullWidth />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField label="Fornecedor" fullWidth />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField label="Preço de Custo" fullWidth />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField label="Preço de Venda" fullWidth />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancelar</Button>
-          <Button onClick={handleClose}>Salvar</Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };
