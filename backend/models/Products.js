@@ -42,7 +42,6 @@ const Products = mongoose.model(
       },
       margin: {
          type: String,
-         required: true,
       },
 
    }, { timestamps: true }),
