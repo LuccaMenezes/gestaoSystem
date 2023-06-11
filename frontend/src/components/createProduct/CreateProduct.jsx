@@ -154,7 +154,7 @@ const CreateProduct = () => {
                      <TextField
                         fullWidth
                         label="Margem de Lucro"
-                        value={product.margin || profitMargin}
+                        value={product.margin = profitMargin || ''}
                         onChange={handleChange}
                         name="margin"
                      />
