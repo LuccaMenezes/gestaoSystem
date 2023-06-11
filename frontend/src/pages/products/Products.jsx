@@ -32,7 +32,7 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const { setFlashMessage } = useFlashMessage();
   const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 6;
+  const perPage = 5;
   const pageCount = Math.ceil(products.length / perPage);
 
   useEffect(() => {
@@ -92,26 +92,62 @@ const Products = () => {
                   <TableCell>Preço de Custo</TableCell>
                   <TableCell>Preço de Venda</TableCell>
                   <TableCell>Margem</TableCell>
+                  <TableCell>Situação</TableCell> {/* Adicionada a coluna Situação */}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {currentProducts.map((product, index) => (
-                  <TableRow
-                    key={product.code}
-                    style={index % 2 === 0 ? {} : { backgroundColor: 'lightyellow' }}
-                  >
-                    <TableCell>{product.code}</TableCell>
-                    <TableCell>{product.description}</TableCell>
-                    <TableCell>{product.unit}</TableCell>
-                    <TableCell>{product.minimumStock}</TableCell>
-                    <TableCell>{product.category}</TableCell>
-                    <TableCell>{product.subcategory}</TableCell>
-                    <TableCell>{product.provider}</TableCell>
-                    <TableCell>{product.purchasePrice}</TableCell>
-                    <TableCell>{product.salePrice}</TableCell>
-                    <TableCell>{product.margin}</TableCell>
-                  </TableRow>
-                ))}
+                {currentProducts.map((product, index) => {
+                  let situacaoColor = '';
+                  let situacaoText = '';
+
+                  if (product.unit < product.minimumStock) {
+                    situacaoColor = 'red';
+                    situacaoText = 'Em falta';
+                  } else if (product.unit === product.minimumStock) {
+                    situacaoColor = 'yellow';
+                    situacaoText = 'Estoque baixo';
+                  } else {
+                    situacaoColor = 'green';
+                    situacaoText = 'OK';
+                  }
+
+                  return (
+                    <TableRow
+                      key={product.code}
+                      style={index % 2 === 1 ? {} : { backgroundColor: 'lightyellow' }}
+                    >
+                      <TableCell>{product.code}</TableCell>
+                      <TableCell>{product.description}</TableCell>
+                      <TableCell>{product.unit}</TableCell>
+                      <TableCell>{product.minimumStock}</TableCell>
+                      <TableCell>{product.category}</TableCell>
+                      <TableCell>{product.subcategory}</TableCell>
+                      <TableCell>{product.provider}</TableCell>
+                      <TableCell>{product.purchasePrice}</TableCell>
+                      <TableCell>{product.salePrice}</TableCell>
+                      <TableCell>{product.margin}</TableCell>
+                      <TableCell>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: '10px',
+                              height: '10px',
+                              borderRadius: '50%',
+                              backgroundColor: situacaoColor,
+                              marginRight: '5px',
+                            }}
+                          ></div>
+                          {situacaoText}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
