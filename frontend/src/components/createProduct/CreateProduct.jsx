@@ -60,8 +60,8 @@ const CreateProduct = () => {
 
    return (
       <>
-         <Button variant="contained" onClick={handleClickOpen}>
-            Adicionar Produto
+         <Button variant="contained" onClick={handleClickOpen} style={{backgroundColor: '#f6c71e'}}>
+            <AddIcon />
          </Button>
          <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Cadastrar Produto</DialogTitle>
