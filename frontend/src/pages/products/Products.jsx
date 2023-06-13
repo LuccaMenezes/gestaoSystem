@@ -19,6 +19,11 @@ import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { FormControl, Select, MenuItem, Button } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+
+
 
 import api from '../../utils/api';
 
@@ -36,7 +41,7 @@ const Products = () => {
   const [selectedColumn, setSelectedColumn] = useState('');
   const { setFlashMessage } = useFlashMessage();
   const [currentPage, setCurrentPage] = useState(0);
-  const perPage = 6;
+  const perPage = 5;
   const pageCount = Math.ceil(products.length / perPage);
 
   useEffect(() => {
@@ -107,6 +112,24 @@ const Products = () => {
   const offset = currentPage * perPage;
   const currentProducts = products.slice(offset, offset + perPage);
 
+  async function removeProduct(id) {
+    let msgType = 'success'
+
+    const data = await api
+         .delete(`products/${id}`, products)
+         .then((response) => {
+            const updatedProducts = products.filter((product) => product._id != id)
+            setProducts(updatedProducts)
+            return response.data;
+         })
+         .catch((err) => {
+            msgType = 'error';
+            return err.response.data;
+         });
+
+      setFlashMessage(data.message, msgType);
+  }
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
@@ -154,7 +177,7 @@ const Products = () => {
             <Button variant="outlined" onClick={resetSearch} sx={{ marginRight: '10px', marginTop: '70px' }}>
               Limpar
             </Button>
-            <div style={{ position: 'relative', top: '35px', left: '620px' }}>
+            <div style={{ position: 'absolute', top: '103px', left: '1335px' }}>
               <CreateProduct />
             </div>
           </Box>
@@ -171,11 +194,12 @@ const Products = () => {
                   <TableCell style={tableHeaderCellStyle}>Subcategoria</TableCell>
                   <TableCell style={tableHeaderCellStyle}>Fornecedor</TableCell>
                   <TableCell style={tableHeaderCellStyle}>Preço de Compra</TableCell>
-                  <TableCell style={tableHeaderCellStyle}>Preço de Venda</TableCell>
+                  <TableCell style={tableHeaderCellStyle}>Preç de Venda</TableCell>
                   <TableCell style={tableHeaderCellStyle}>Margem</TableCell>
                   <TableCell style={{ ...tableHeaderCellStyle, width: '137px' }}>
                     Situação
                   </TableCell>
+                  <TableCell style={tableHeaderCellStyle}>Ações</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -228,6 +252,20 @@ const Products = () => {
                           {situacaoText}
                         </div>
                       </TableCell>
+                      <TableCell>
+                        <IconButton aria-label="edit" size="small">
+                          <EditIcon />
+                        </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        size="small"
+                        onClick={() => {
+                          removeProduct(product._id)
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
                     </TableRow>
                   );
                 })}
