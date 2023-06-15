@@ -19,20 +19,20 @@ const SelectProvider = ({ value, onChange }) => {
   }, []);
 
   const handleProviderChange = (event) => {
-   const selectedProvider = event.target.value;
-   setSelectedProvider(selectedProvider);
-   onChange({
-     target: {
-       name: 'provider',
-       value: selectedProvider
-     }
-   });
- };
+    const selectedProvider = event.target.value;
+    setSelectedProvider(selectedProvider);
+    onChange({
+      target: {
+        name: 'provider',
+        value: selectedProvider
+      }
+    });
+  };
  
   return (
     <FormControl fullWidth>
       <InputLabel>Fornecedor</InputLabel>
-      <Select value={selectedProvider} onChange={handleProviderChange} label="Fornecedor">
+      <Select value={value} onChange={handleProviderChange} label="Fornecedor">
         {provider.map(provider => (
           <MenuItem key={provider.company} value={provider.company}>
             {provider.company}

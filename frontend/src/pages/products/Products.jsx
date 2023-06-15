@@ -24,8 +24,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 
 
-
 import api from '../../utils/api';
+
+import EditProductModal from '../../components/editProductModal/EditProductModal'; // Importação do novo componente de modal
 
 const theme = createTheme({
   palette: {
@@ -68,7 +69,9 @@ const Products = () => {
       ) {
         return product[selectedColumn].toString().includes(searchTerm);
       } else {
-        return product[selectedColumn].toLowerCase().includes(searchTerm.toLowerCase());
+        return product[selectedColumn]
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
       }
     });
 
@@ -113,35 +116,90 @@ const Products = () => {
   const currentProducts = products.slice(offset, offset + perPage);
 
   async function removeProduct(id) {
-    let msgType = 'success'
+    let msgType = 'success';
 
     const data = await api
-         .delete(`products/${id}`, products)
-         .then((response) => {
-            const updatedProducts = products.filter((product) => product._id != id)
-            setProducts(updatedProducts)
-            return response.data;
-         })
-         .catch((err) => {
-            msgType = 'error';
-            return err.response.data;
-         });
+      .delete(`products/${id}`, products)
+      .then((response) => {
+        const updatedProducts = products.filter(
+          (product) => product._id !== id
+        );
+        setProducts(updatedProducts);
+        return response.data;
+      })
+      .catch((err) => {
+        msgType = 'error';
+        return err.response.data;
+      });
 
-      setFlashMessage(data.message, msgType);
+    setFlashMessage(data.message, msgType);
   }
+
+  const [editingProduct, setEditingProduct] = useState(null); // Estado para o produto em edição
+
+  const openEditModal = (product) => {
+    setEditingProduct(product); // Define o produto a ser editado
+  };
+
+  const closeEditModal = () => {
+    setEditingProduct(null); // Limpa o estado de edição
+  };
+
+  const saveEditedProduct = async (id, editedProduct) => {
+    let msgType = 'success';
+  
+    const data = await api
+      .patch(`products/${id}`, editedProduct)
+      .then((response) => {
+        const updatedProducts = products.map((product) => {
+          if (product._id === editedProduct.id) {
+            return response.data.product;
+          }
+          return product;
+        });
+        setProducts(updatedProducts);
+        setFlashMessage(response.data.message, 'success');
+        closeEditModal();
+      })
+      .catch((err) => {
+        msgType = 'error';
+        return err.response.data;
+      });
+  
+    setFlashMessage(data.message, msgType);
+  };
+  
+  
+    // setFlashMessage(data.message, msgType);
+    // api
+    //   .put(`/products/${editedProduct.id}`, editedProduct)
+    //   .then((response) => {
+      //   const updatedProducts = products.map((product) => {
+      //     if (product._id === editedProduct.id) {
+      //       return response.data.product;
+      //     }
+      //     return product;
+      //   });
+      //   setProducts(updatedProducts);
+      //   setFlashMessage(response.data.message, 'success');
+      //   closeEditModal();
+      // })
+    //   .catch((error) => {
+    //     setFlashMessage(error.response.data.message, 'error');
+    //   });
 
   return (
     <>
       <Box sx={{ display: 'flex' }}>
         <Sidebar />
-        <Box
-          component="main"
-          sx={{ flexGrow: 1, p: 3, marginTop: '0px' }}
-        >
-
-
-
-          <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+        <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop: '0px' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '10px',
+            }}
+          >
             <FormControl sx={{ marginRight: '10px' }}>
               <Select
                 value={selectedColumn}
@@ -171,10 +229,26 @@ const Products = () => {
               onChange={(event) => setSearchTerm(event.target.value)}
               sx={{ marginRight: '10px', marginTop: '70px' }}
             />
-            <Button variant="contained" onClick={handleSearch} sx={{ marginRight: '10px', marginTop: '70px', backgroundColor: '#f6c71e' }}>
+            <Button
+              variant="contained"
+              onClick={handleSearch}
+              sx={{
+                marginRight: '10px',
+                marginTop: '70px',
+                backgroundColor: '#f6c71e',
+              }}
+            >
               Filtrar
             </Button>
-            <Button variant="outlined" onClick={resetSearch} sx={{ marginRight: '10px', marginTop: '70px' }}>
+            <Button
+              variant="contained"
+              onClick={resetSearch}
+              sx={{
+                marginRight: '10px',
+                marginTop: '70px',
+                backgroundColor: '#f6c71e',
+              }}
+            >
               Limpar
             </Button>
             <div style={{ position: 'absolute', top: '103px', left: '1335px' }}>
@@ -194,9 +268,9 @@ const Products = () => {
                   <TableCell style={tableHeaderCellStyle}>Subcategoria</TableCell>
                   <TableCell style={tableHeaderCellStyle}>Fornecedor</TableCell>
                   <TableCell style={tableHeaderCellStyle}>Preço de Compra</TableCell>
-                  <TableCell style={tableHeaderCellStyle}>Preç de Venda</TableCell>
+                  <TableCell style={tableHeaderCellStyle}>Preço de Venda</TableCell>
                   <TableCell style={tableHeaderCellStyle}>Margem</TableCell>
-                  <TableCell style={{ ...tableHeaderCellStyle, width: '137px' }}>
+                  <TableCell style={{  ...tableHeaderCellStyle, textAlign: 'center', width: '137px' }}>
                     Situação
                   </TableCell>
                   <TableCell style={tableHeaderCellStyle}>Ações</TableCell>
@@ -233,7 +307,7 @@ const Products = () => {
                       <TableCell style={tableCellCenterStyle}>{product.purchasePrice}</TableCell>
                       <TableCell style={tableCellCenterStyle}>{product.salePrice}</TableCell>
                       <TableCell style={tableCellCenterStyle}>{product.margin}</TableCell>
-                      <TableCell style={tableCellCenterStyle}>
+                      <TableCell style={{...tableCellCenterStyle, textAlign: 'center' }}>
                         <div
                           style={{
                             display: 'flex',
@@ -253,7 +327,7 @@ const Products = () => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <IconButton aria-label="edit" size="small">
+                        <IconButton aria-label="edit" size="small" onClick={() => openEditModal(product)}>
                           <EditIcon />
                         </IconButton>
                       <IconButton
@@ -272,22 +346,26 @@ const Products = () => {
               </TableBody>
             </Table>
           </TableContainer>
-
-          <div style={paginationStyle}>
-            <ThemeProvider theme={theme}>
-              <Stack spacing={2}>
-                <Pagination
-                  count={pageCount}
-                  page={currentPage + 1}
-                  onChange={handlePageChange}
-                  color="primary"
-                  size="large"
-                />
-              </Stack>
-            </ThemeProvider>
-          </div>
+          <ThemeProvider theme={theme}>
+            <Stack sx={paginationStyle}>
+              <Pagination
+                count={pageCount}
+                page={currentPage + 1}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Stack>
+          </ThemeProvider>
         </Box>
       </Box>
+      {editingProduct && ( // Renderiza o modal de edição se houver um produto em edição
+        <EditProductModal
+          open={Boolean(editingProduct)}
+          product={editingProduct}
+          onSave={(editedProduct) => saveEditedProduct(editingProduct._id, editedProduct)}
+          onClose={closeEditModal}
+        />
+      )}
     </>
   );
 };
